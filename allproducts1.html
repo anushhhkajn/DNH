@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Astro Gifts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .container h2 {
+            margin-bottom: 20px;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+        }
+
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .product {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            text-align: center;
+        }
+
+        .product img {
+            max-width: 100%;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .product h3 {
+            margin: 10px 0;
+        }
+
+        .no-results {
+            text-align: center;
+            font-size: 18px;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>All Astro Gifts</h2>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search for gifts..." onkeyup="searchProducts()">
+        </div>
+        <div class="products" id="allProductsContainer"></div>
+        <div class="no-results" id="noResults" style="display: none;">No results found for your search</div>
+    </div>
+    <script>
+        let allProducts = [];
+
+        function fetchAllProducts() {
+            fetch('astro_gifts.html')
+                .then(response => response.text())
+                .then(data => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+                    allProducts = [];
+
+                    // Find all zodiac containers and their products
+                    const zodiacContainers = doc.querySelectorAll('.zodiac-container .zodiac-sign');
+                    zodiacContainers.forEach(container => {
+                        const products = container.querySelectorAll('.product');
+                        products.forEach(product => {
+                            allProducts.push({
+                                name: product.querySelector('h3').textContent.trim(),
+                                image: product.querySelector('img').getAttribute('src'),
+                                link: product.querySelector('a') ? product.querySelector('a').getAttribute('href') : null
+                            });
+                        });
+                    });
+
+                    // Display all products initially
+                    displayAllProducts(allProducts);
+                })
+                .catch(error => console.error('Error fetching products:', error));
+        }
+
+        function displayAllProducts(products) {
+            const allProductsContainer = document.getElementById('allProductsContainer');
+            const noResults = document.getElementById('noResults');
+            allProductsContainer.innerHTML = ''; // Clear any existing products
+
+            if (products.length === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                products.forEach(product => {
+                    const productDiv = document.createElement('div');
+                    productDiv.classList.add('product');
+                    productDiv.innerHTML = `
+                        <a href="${product.link}"><img src="${product.image}" alt="${product.name}"></a>
+                        <h3>${product.name}</h3>
+                    `;
+                    allProductsContainer.appendChild(productDiv);
+                });
+            }
+        }
+
+        function searchProducts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filteredProducts = allProducts.filter(product =>
+                product.name.toLowerCase().includes(query)
+            );
+            displayAllProducts(filteredProducts);
+        }
+
+        fetchAllProducts();
+    </script>
+</body>
+
+</html>

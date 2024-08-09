@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suggested Products</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .container h2 {
+            margin-bottom: 20px;
+        }
+
+        .products, .astro-gifts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .product, .gift {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            text-align: center;
+        }
+
+        .product img, .gift img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        .product h3, .gift h3 {
+            margin: 10px 0;
+        }
+
+        .all-products-button {
+            display: block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-align: center;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .all-products-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Jewellery Products for <span id="jewelleryZodiacSign"></span></h2>
+        <div class="products" id="productsContainer"></div>
+        <button class="all-products-button" onclick="window.location.href='allproducts.html'">All Jewellery Products</button>
+        <h2>Astro Gifts for <span id="astroGiftsZodiacSign"></span></h2>
+        <div class="astro-gifts" id="giftsContainer"></div>
+        <button class="all-products-button" onclick="window.location.href='allproducts1.html'">All Astro Gifts</button>
+    </div>
+    <script>
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+        if (!currentUser) {
+            alert('No user logged in');
+            window.location.href = 'login.html';
+        } else {
+            const zodiacSign = currentUser.zodiacSign;
+            document.getElementById('jewelleryZodiacSign').textContent = zodiacSign;
+            document.getElementById('astroGiftsZodiacSign').textContent = zodiacSign;
+            fetchProducts(zodiacSign);
+            fetchGifts(zodiacSign);
+        }
+
+        function fetchProducts(zodiacSign) {
+            fetch('jewellery.html')
+                .then(response => response.text())
+                .then(data => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+                    const zodiacContainer = doc.getElementById(zodiacSign.toLowerCase());
+                    if (zodiacContainer) {
+                        const products = zodiacContainer.getElementsByClassName('product');
+                        const productsArray = Array.from(products).map(product => ({
+                            name: product.querySelector('h3').textContent.trim(),
+                            image: product.querySelector('img').getAttribute('src'),
+                            link: product.querySelector('a') ? product.querySelector('a').getAttribute('href') : '#'
+                        }));
+                        displayItems(productsArray, 'productsContainer', 'product');
+                    } else {
+                        alert(`No products found for ${zodiacSign}`);
+                    }
+                })
+                .catch(error => console.error('Error fetching products:', error));
+        }
+
+        function fetchGifts(zodiacSign) {
+            fetch('astro_gifts.html')
+                .then(response => response.text())
+                .then(data => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+                    const zodiacContainer = doc.getElementById(zodiacSign.toLowerCase());
+                    if (zodiacContainer) {
+                        const gifts = zodiacContainer.getElementsByClassName('product');
+                        const giftsArray = Array.from(gifts).map(gift => ({
+                            name: gift.querySelector('h3').textContent.trim(),
+                            image: gift.querySelector('img').getAttribute('src'),
+                            link: gift.querySelector('a') ? gift.querySelector('a').getAttribute('href') : '#'
+                        }));
+                        displayItems(giftsArray, 'giftsContainer', 'gift');
+                    } else {
+                        alert(`No gifts found for ${zodiacSign}`);
+                    }
+                })
+                .catch(error => console.error('Error fetching gifts:', error));
+        }
+
+        function displayItems(items, containerId, className) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add(className);
+                itemDiv.innerHTML = `
+                    <a href="${item.link}"><img src="${item.image}" alt="${item.name}"></a>
+                    <h3>${item.name}</h3>
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aries Necklace</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        .product-detail {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .product-detail img {
+            max-width: 70%;
+            border-radius: 8px;
+        }
+
+        .product-detail h1 {
+            margin: 20px 0;
+        }
+
+        .product-detail form {
+            margin-top: 20px;
+        }
+
+        .product-detail form label,
+        .product-detail form select,
+        .product-detail form button {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .product-detail form button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .product-detail form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="product-detail">
+        <img src="images/aries_necklace.webp" alt="Aries Necklace">
+        <h1>Aries Necklace</h1>
+        <p>Select the material of the necklace:</p>
+        <form action="cart.html" method="post">
+            <input type="hidden" name="productName" value="Aries Necklace">
+            <input type="hidden" name="productImage" value="images/aries_necklace.webp">
+            <label for="material">Material:</label>
+            <select id="material" name="material">
+                <option value="gold">Gold</option>
+                <option value="silver">Silver</option>
+                <option value="platinum">Platinum</option>
+            </select>
+            <button type="submit">Add to cart</button>
+        </form>
+        <h2>Benefits of Aries Pendant</h2>
+        <p>Wearing an Aries pendant can offer several health benefits:</p>
+        <ul>
+            <li><strong>Boosts Confidence:</strong> Aries is a sign of courage and strength. Wearing the pendant can
+                enhance these traits, leading to improved mental health and self-esteem.</li>
+            <li><strong>Stress Relief:</strong> The pendant can serve as a reminder of one's inner strength, helping to
+                alleviate stress and anxiety.</li>
+            <li><strong>Enhanced Energy:</strong> Aries is ruled by Mars, which is associated with vitality and energy.
+                The pendant can help wearers feel more energetic and motivated.</li>
+            <li><strong>Improved Focus:</strong> The pendant can help Aries individuals concentrate better on their
+                tasks and goals, promoting overall well-being.</li>
+        </ul>
+    </div>
+</body>
+
+</html>
